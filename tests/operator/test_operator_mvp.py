@@ -5,6 +5,7 @@ from pathlib import Path
 
 from operator_mvp.agent import OperatorAgent
 from operator_mvp.config import load_operator_config
+from operator_mvp.outbox import OperatorOutbox
 from operator_mvp.skills import select_skill
 
 
@@ -19,6 +20,7 @@ data_sources:
   voice_guidelines_path: data/voice.md
   conversation_context_path: data/context.json
   interaction_log_path: data/interactions.jsonl
+  outbox_path: data/outbox
 communication:
   email_address: test@example.com
 """.strip()
@@ -75,3 +77,39 @@ def test_draft_email_for_customer_logs_context(tmp_path: Path) -> None:
     assert "sandalwood" in result.output
     log_text = (tmp_path / "data" / "interactions.jsonl").read_text(encoding="utf-8")
     assert "draft_customer_email" in log_text
+
+
+def test_outbox_creates_draft_only_email(tmp_path: Path) -> None:
+    path = write_fixture(tmp_path)
+    cfg = load_operator_config(path)
+    outbox = OperatorOutbox(cfg)
+
+    draft = outbox.create_email_draft(
+        to="maya@example.com",
+        subject="Checking in",
+        body="Hi Maya, this is a draft.",
+        customer_id="maya",
+    )
+
+    assert draft["status"] == "draft_pending_approval"
+    assert draft["channel"] == "email"
+    assert draft["to"] == "maya@example.com"
+    assert (tmp_path / "data" / "outbox" / f"{draft['id']}.json").exists()
+
+
+def test_setup_wizard_writes_nontechnical_config(tmp_path: Path) -> None:
+    from operator_mvp.setup_wizard import write_config
+
+    config_path = tmp_path / "operator.config.yaml"
+    write_config(
+        config_path,
+        business_name="Boutique Grooming",
+        owner_name="Eaden Myles",
+        email_address="eaden@example.com",
+        sms_from_number="+155****4567",
+    )
+
+    cfg = load_operator_config(config_path)
+    assert cfg.business_name == "Boutique Grooming"
+    assert cfg.owner_name == "Eaden Myles"
+    assert cfg.communication.email_address == "eaden@example.com"

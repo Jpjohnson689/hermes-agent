@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from operator_mvp.memory import CustomerRecord, OperatorMemory
+from operator_mvp.refine import refine_email_with_hermes
 
 
 @dataclass(slots=True)
@@ -62,9 +63,15 @@ class OperatorSkills:
             f"{self.memory.config.owner_name}\n"
             f"{self.memory.config.business_name}"
         )
+
+        try:
+            refined = refine_email_with_hermes(body, guidelines)
+        except Exception as e:
+            refined = body + f"\n\n[Hermes refinement failed: {e}]"
+
         return SkillResult(
             skill="draft_customer_email",
-            output=body + "\n\n---\nVoice guidance used:\n" + _compact(guidelines, 900),
+            output=refined + "\n\n---\nVoice guidance used:\n" + _compact(guidelines, 900),
             metadata={"customer_id": customer.id, "channel": "email", "draft_only": True},
         )
 

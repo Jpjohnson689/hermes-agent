@@ -24,6 +24,7 @@ class OperatorDataSources:
     voice_guidelines_path: Path = Path("data/voice_guidelines.md")
     conversation_context_path: Path = Path("data/conversation_context.json")
     interaction_log_path: Path = Path("data/interactions.jsonl")
+    outbox_path: Path = Path("data/outbox")
 
 
 @dataclass(slots=True)
@@ -59,6 +60,10 @@ class OperatorConfig:
     @property
     def interaction_log_path(self) -> Path:
         return _resolve(self.base_dir, self.data_sources.interaction_log_path)
+
+    @property
+    def outbox_path(self) -> Path:
+        return _resolve(self.base_dir, self.data_sources.outbox_path)
 
 
 def _resolve(base_dir: Path, value: Path) -> Path:
@@ -122,6 +127,7 @@ def load_operator_config(path: str | Path = DEFAULT_CONFIG_PATH) -> OperatorConf
             voice_guidelines_path=Path(str(data_raw.get("voice_guidelines_path") or "data/voice_guidelines.md")),
             conversation_context_path=Path(str(data_raw.get("conversation_context_path") or "data/conversation_context.json")),
             interaction_log_path=Path(str(data_raw.get("interaction_log_path") or "data/interactions.jsonl")),
+            outbox_path=Path(str(data_raw.get("outbox_path") or "data/outbox")),
         ),
         communication=OperatorCommunicationConfig(
             email_address=str(comm_raw.get("email_address") or ""),
