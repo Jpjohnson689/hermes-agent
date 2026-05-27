@@ -1,0 +1,24 @@
+# Operator MVP configuration
+# Copy this file to operator.config.yaml and update the values.
+
+business_name: "Eaden Myles Grooming"
+owner_name: "Eaden Myles"
+
+model:
+  provider: "openai-codex"
+  model: "gpt-5.5"
+  oauth_provider: "openai-codex"
+
+data_sources:
+  crm_path: "data/crm.json"
+  voice_guidelines_path: "data/voice_guidelines.md"
+  conversation_context_path: "data/conversation_context.json"
+  interaction_log_path: "data/interactions.jsonl"
+
+communication:
+  # Credentials should come from environment variables, not hard-coded secrets.
+  email_address: "${OPERATOR_EMAIL_ADDRESS}"
+  email_imap_host: "${OPERATOR_EMAIL_IMAP_HOST}"
+  email_smtp_host: "${OPERATOR_EMAIL_SMTP_HOST}"
+  sms_provider: "twilio"
+  sms_from_number: "${OPERATOR_SMS_FROM_NUMBER}"

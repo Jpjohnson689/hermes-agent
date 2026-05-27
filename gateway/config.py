@@ -106,27 +106,8 @@ class Platform(Enum):
     are cached in ``_value2member_map_`` for identity-stable comparisons.
     """
     LOCAL = "local"
-    TELEGRAM = "telegram"
-    DISCORD = "discord"
-    WHATSAPP = "whatsapp"
-    SLACK = "slack"
-    SIGNAL = "signal"
-    MATTERMOST = "mattermost"
-    MATRIX = "matrix"
-    HOMEASSISTANT = "homeassistant"
     EMAIL = "email"
     SMS = "sms"
-    DINGTALK = "dingtalk"
-    API_SERVER = "api_server"
-    WEBHOOK = "webhook"
-    MSGRAPH_WEBHOOK = "msgraph_webhook"
-    FEISHU = "feishu"
-    WECOM = "wecom"
-    WECOM_CALLBACK = "wecom_callback"
-    WEIXIN = "weixin"
-    BLUEBUBBLES = "bluebubbles"
-    QQBOT = "qqbot"
-    YUANBAO = "yuanbao"
     @classmethod
     def _missing_(cls, value):
         """Accept unknown platform names only for known plugin adapters.

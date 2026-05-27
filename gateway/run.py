@@ -6201,9 +6201,11 @@ class GatewayRunner:
                 return None
         except Exception as e:
             logger.debug("Platform registry lookup for '%s' failed: %s", platform.value, e)
-        # Fall through to built-in adapters below
+        # Operator MVP only ships built-in adapters for email and SMS.
+        # Other Hermes messaging platforms were intentionally stripped for a
+        # focused service-business assistant surface.
 
-        if platform == Platform.TELEGRAM:
+        if False:
             from gateway.platforms.telegram import TelegramAdapter, check_telegram_requirements
             if not check_telegram_requirements():
                 logger.warning("Telegram: python-telegram-bot not installed")
